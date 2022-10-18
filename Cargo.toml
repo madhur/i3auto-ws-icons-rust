@@ -1,0 +1,15 @@
+[package]
+name = "i3-auto-workspace-icons-rust"
+repository = "https://github.com/madhur/i3-auto-workspace-icons-rust"
+version = "0.1.1"
+authors = ["Madhur Ahuja <ahuja.madhur@gmail.com>"]
+description = "Autoname workspaces for i3"
+edition = "2021"
+
+[dependencies]
+swayipc = "3.0"
+
+[dependencies.clap]
+version = "3.0"
+default-features = false
+features = ["std", "derive"]

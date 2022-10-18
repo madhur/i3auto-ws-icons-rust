@@ -1,0 +1,14 @@
+[[window.icons]]
+
+
+[[window.icons.alacritty]]
+icon="terminal"
+
+[[window.icons.kitty]]
+icon="terminal"
+
+[[window.icons.guake]]
+icon="terminal"
+
+[[window.icons.google-chrome]]
+icon="google-chrome"
