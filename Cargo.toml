@@ -1,5 +1,5 @@
 [package]
-name = "i3-auto-workspace-icons-rust"
+name = "i3-auto-ws-icons-rs"
 repository = "https://github.com/madhur/i3-auto-workspace-icons-rust"
 version = "0.1.1"
 authors = ["Madhur Ahuja <ahuja.madhur@gmail.com>"]
@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 swayipc = "3.0"
+xcb = "0.10"
 
 [dependencies.clap]
 version = "3.0"
