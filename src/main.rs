@@ -1,17 +1,17 @@
 use swayipc::{Connection, EventType, Node, Workspace};
 use swayipc::{Event, NodeType, WindowChange};
-mod i3_node;
-use i3_node::I3Node;
+mod models;
+use self::models::i3_info::I3Info;
 
 fn rename_workspaces(mut conn: Connection) {
     // Check if focused workspace is in "allowed list".
     // If `workspaces` is empty, skip allow all workspaces.
-    let workspaces = conn.get_workspaces().unwrap();
-    println!("{:?}", workspaces);
+    // let workspaces = conn.get_workspaces().unwrap();
+    // println!("{:?}", workspaces);
 
-    let i3_node = I3Node::new(conn.get_tree().unwrap(), None, conn).set_children(conn);
+    let i3_info = I3Info::new(conn);
 
-    for node in i3_node.get_leaves() {
+    for node in i3_info.get_leaves() {
         println!("{:?}", node);
 
         if node.node_type == NodeType::Dockarea {
@@ -38,7 +38,7 @@ fn main() -> Result<(), std::io::Error> {
                     || WindowChange::Close == e.change
                     || WindowChange::Move == e.change
                 {
-                    rename_workspaces(conn)
+                    rename_workspaces(Connection::new().unwrap());
                 }
                 //println!("{:?}", e);
             }

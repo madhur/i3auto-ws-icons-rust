@@ -30,7 +30,7 @@ fn construct_workspace_name(parts: NameParts) {
 
 fn icon_for_window(window: i32i32) {
     let (conn, screen_num) = xcb::Connection::connect(None).unwrap();
-    let wm_class = get_class(conn, window)
+    let wm_class = get_class(conn, window);
 }
 
 fn get_class(conn: &Connection, id: &i32) -> String {
