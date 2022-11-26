@@ -1,9 +1,9 @@
-use swayipc::{Connection, EventType, Node, Workspace};
+use swayipc::{Connection, EventType};
 use swayipc::{Event, WindowChange};
 mod models;
 use self::models::i3_info::I3Info;
 
-fn rename_workspaces(mut conn: Connection) {
+fn rename_workspaces(conn: Connection) {
     // Check if focused workspace is in "allowed list".
     // If `workspaces` is empty, skip allow all workspaces.
     // let workspaces = conn.get_workspaces().unwrap();
@@ -11,12 +11,11 @@ fn rename_workspaces(mut conn: Connection) {
 
     let i3_info = I3Info::new(conn);
 
-    let leaves = i3_info.get_leaves();
-    let parent_child = i3_info.dfs_parent_child();
+    let _leaves = i3_info.get_leaves();
+    let _parent_child = i3_info.dfs_parent_child();
     
 }
 
-fn process_node(node: Node, workspaces: Vec<Workspace>) {}
 
 fn main() -> Result<(), std::io::Error> {
     let conn = Connection::new().unwrap();
@@ -43,9 +42,3 @@ fn main() -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn on_exit(conn: &mut Connection) {
-    let workspaces = conn.get_workspaces().unwrap();
-    if !workspaces.is_empty() {
-        for workspace in workspaces {}
-    }
-}

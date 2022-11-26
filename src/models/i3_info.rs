@@ -87,7 +87,6 @@ impl I3Info {
                 q.push_back(child);
             }
         }
-        self.get_leaves();
         return parent_child;
     }
 
