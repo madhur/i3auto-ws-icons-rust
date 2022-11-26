@@ -1,5 +1,5 @@
 use swayipc::{Connection, EventType, Node, Workspace};
-use swayipc::{Event, NodeType, WindowChange};
+use swayipc::{Event, WindowChange};
 mod models;
 use self::models::i3_info::I3Info;
 
@@ -11,15 +11,9 @@ fn rename_workspaces(mut conn: Connection) {
 
     let i3_info = I3Info::new(conn);
 
-    // {
-        for node in i3_info.get_leaves() {
-            println!("Leaves: {:?}", node);
-        }
-    // }
-    // let parent_child = i3_info.dfs_parent_child();
-    // for node in parent_child.keys() {
-    //     println!("Parent-Child: {:?} {:?}", node,  parent_child.get(node));
-    // }
+    let leaves = i3_info.get_leaves();
+    let parent_child = i3_info.dfs_parent_child();
+    
 }
 
 fn process_node(node: Node, workspaces: Vec<Workspace>) {}

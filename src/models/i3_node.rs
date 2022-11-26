@@ -4,7 +4,6 @@ use std::{
 };
 use swayipc::{Node, NodeType};
 
-
 #[derive(Debug, Clone)]
 pub struct I3Node {
     pub id: i64,
@@ -38,7 +37,7 @@ impl I3Node {
     pub fn new(node: Node) -> Self {
         let mut nodes: Vec<I3Node> = Vec::new();
         let node_type = node.node_type;
-        let name = node.name.unwrap_or(String::from(""));
+        let name = String::from(node.name.unwrap_or(String::from("")));
         for child_node in node.nodes {
             nodes.push(I3Node::new(child_node));
         }
