@@ -11,6 +11,7 @@ pub struct I3Node {
     pub name: String,
     pub node_type: NodeType,
     pub nodes: Vec<I3Node>,
+   
 }
 
 impl PartialEq for I3Node {
@@ -37,8 +38,7 @@ impl I3Node {
     pub fn new(node: Node) -> Self {
         let mut nodes: Vec<I3Node> = Vec::new();
         let node_type = node.node_type;
-        let name = node.name.unwrap();
-
+        let name = node.name.unwrap_or(String::from(""));
         for child_node in node.nodes {
             nodes.push(I3Node::new(child_node));
         }

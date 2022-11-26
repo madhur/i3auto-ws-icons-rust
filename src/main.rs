@@ -11,15 +11,15 @@ fn rename_workspaces(mut conn: Connection) {
 
     let i3_info = I3Info::new(conn);
 
-    for node in i3_info.get_leaves() {
-        println!("{:?}", node);
-
-        if node.node_type == NodeType::Dockarea {
-            // ignore Nodes of type dockArea
-            continue;
-        } else if node.node_type == NodeType::Workspace {
+    // {
+        for node in i3_info.get_leaves() {
+            println!("Leaves: {:?}", node);
         }
-    }
+    // }
+    // let parent_child = i3_info.dfs_parent_child();
+    // for node in parent_child.keys() {
+    //     println!("Parent-Child: {:?} {:?}", node,  parent_child.get(node));
+    // }
 }
 
 fn process_node(node: Node, workspaces: Vec<Workspace>) {}
