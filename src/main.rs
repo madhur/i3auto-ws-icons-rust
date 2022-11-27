@@ -16,7 +16,7 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
     let parent_child = i3_info.dfs_parent_child();
     print_info(&parent_child);
     let workspaces = i3_info.get_workspaces();
-    //println!("workspaces {:?}", workspaces);
+    // println!("workspaces {:?}", workspaces);
 
     for workspace in workspaces {
         // get leaves of workspace
@@ -27,6 +27,7 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
             // println!("{:?}", name_parts);
             let mut icon_list = Vec::new();
             for leaf in leaves {
+                println!("Inspect leaf node: {:?}", leaf);
                 icon_list.push(util::icon_for_window(
                     &leaf.window_id,
                     config.as_ref().unwrap(),
@@ -34,7 +35,6 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
                 ));
             }
             let formatted_icon_list = util::format_icon_list(icon_list);
-            println!("{:?}", formatted_icon_list);
 
             let new_workspace_name;
             if let Some(name_part) = name_parts {
@@ -86,8 +86,12 @@ fn main() -> Result<(), std::io::Error> {
 }
 
 fn print_info(parent_child: &HashMap<i64, Vec<I3Node>>) {
-    for _parent in parent_child.keys() {
-        // println!("Parent {:?} -> {:?}", parent, parent_child.get(parent));
+    for parent in parent_child.keys() {
+        println!(
+            "Workspace: Child {:?} -> {:?}",
+            parent,
+            parent_child.get(parent)
+        );
     }
 }
 

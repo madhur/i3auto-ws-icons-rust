@@ -5,6 +5,7 @@ use serde_derive::Deserialize;
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub default_icon: String,
+    pub remove_duplicates: Option<bool>,
     pub icons: Icon,
 }
 

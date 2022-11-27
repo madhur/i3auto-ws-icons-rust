@@ -33,8 +33,13 @@ impl I3Info {
         while let Some(t) = q.pop_front() {
             let node_type = t.node_type;
             for child in &t.nodes {
+
                 if node_type == NodeType::Workspace {
                     parent_workspace = t.id;
+                }
+                else if node_type == NodeType::Dockarea {
+                    // We don't want to handle dock area
+                    continue;
                 }
                 if (child.node_type == NodeType::Con || child.node_type == NodeType::FloatingCon) && child.nodes.len() == 0 {
                     let mut window_list: Vec<I3Node>;
