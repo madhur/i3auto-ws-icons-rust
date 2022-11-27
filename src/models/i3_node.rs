@@ -13,7 +13,8 @@ pub struct I3Node {
     pub window_class: String,
     pub window_instance: String,
     pub window_role: String,
-    pub window_title: String  
+    pub window_title: String,
+    pub window_id: Option<i64>,  
 }
 
 impl PartialEq for I3Node {
@@ -71,7 +72,8 @@ impl I3Node {
             window_class: window_class,
             window_title: window_title,
             window_role: window_role,
-            window_instance: window_instance
+            window_instance: window_instance,
+            window_id: node.window
         };
     }
 }

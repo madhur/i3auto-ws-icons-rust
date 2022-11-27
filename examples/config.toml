@@ -1,4 +1,7 @@
-[[window.icons]]
+default_icon = '*'
+remove_duplicates = false
+
+[[icons]]
 alacritty= 'terminal'
 atom= 'code'
 banshee= 'play'
@@ -62,7 +65,6 @@ xournal= 'file-alt'
 yelp= 'code'
 zenity= 'window-maximize'
 zoom= 'comment'
-jetbrains-idea= 'java'
 jetbrains-idea-ce= 'java'
 DBeaver= 'database'
 code= 'file'

@@ -1,5 +1,5 @@
 [package]
-name = "i3-auto-ws-icons-rs"
+name = "i3auto-ws-icons-rs"
 repository = "https://github.com/madhur/i3-auto-workspace-icons-rust"
 version = "0.1.1"
 authors = ["Madhur Ahuja <ahuja.madhur@gmail.com>"]
@@ -9,8 +9,18 @@ edition = "2021"
 [dependencies]
 swayipc = "3.0.1"
 xcb = "0.10"
+dirs-next = "2.0" 
+toml = "0.5"
+regex = "1"
+serde_derive = "1.0.147"
+xproto = "2.0.1"
 
 [dependencies.clap]
 version = "3.0"
 default-features = false
 features = ["std", "derive"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive", "rc"]
+

@@ -1,9 +1,8 @@
 use std::collections::{HashMap, VecDeque};
 use swayipc::{Connection, NodeType, Workspace};
-
 use super::i3_node::I3Node;
 
-
+#[derive(Debug, Clone)]
 pub struct I3Info {
     node: I3Node,
     workspaces: Vec<Workspace>,
@@ -14,7 +13,7 @@ impl I3Info {
         return self.workspaces;
     }
 
-    pub fn new(mut conn: Connection) -> Self {
+    pub fn new(conn: &mut Connection) -> Self {
         let workspaces: Vec<Workspace> = conn.get_workspaces().unwrap();
 
         let node = conn.get_tree().unwrap();
