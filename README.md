@@ -48,7 +48,7 @@ default_icon = '*'
 
 The configuration comes with preset class names and icons for commonly used programs such as:
 
-```
+```toml
 [[icons]]
 alacritty = 'terminal'
 kitty= 'terminal'
