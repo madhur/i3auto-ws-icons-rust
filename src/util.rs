@@ -1,11 +1,11 @@
 use super::models::config::Config;
 use super::models::name_parts::NameParts;
+use crate::models::font_awesome::FAConfig;
 use dirs_next::{config_dir, data_dir};
 use regex::Regex;
-use serde::de::DeserializeOwned;
-use std::error::Error;
+use std::char::from_u32;
+use std::collections::HashMap;
 use std::fs;
-use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
 use xcb::xproto;
@@ -32,15 +32,6 @@ pub fn parse_workspace_name(name: String) -> Option<NameParts> {
 
 pub fn construct_workspace_name(parts: NameParts) -> String {
     return format!("{}:{}{}", parts.num, parts.short_name, parts.icon);
-}
-
-pub fn class_for_window(window: i32) -> String {
-    let (conn, screen_num) = xcb::Connection::connect(None).unwrap();
-    return get_class(&conn, &window);
-}
-
-pub fn format_icon_list(icon_list: Vec<String>) -> String {
-    return icon_list.join(" ");
 }
 
 fn get_class(conn: &Connection, id: &i32) -> String {
@@ -80,7 +71,7 @@ fn get_class(conn: &Connection, id: &i32) -> String {
     return result;
 }
 
-pub fn get_icon_from_classes(config: &Config, window_classes: String) -> Option<String> {
+fn get_icon_from_classes(config: &Config, window_classes: String) -> Option<String> {
     let results: Vec<&str> = window_classes.split('\0').collect();
     for str in results {
         println!("checking icon for {}", str);
@@ -90,6 +81,36 @@ pub fn get_icon_from_classes(config: &Config, window_classes: String) -> Option<
         }
     }
     return None;
+}
+
+pub fn class_for_window(window: i32) -> String {
+    let (conn, _screen_num) = xcb::Connection::connect(None).unwrap();
+    return get_class(&conn, &window);
+}
+
+pub fn format_icon_list(icon_list: Vec<String>) -> String {
+    return icon_list.join(" ");
+}
+
+pub fn icon_for_window(
+    window_id: &Option<i64>,
+    config: &Config,
+    fa_map: HashMap<String, String>,
+) -> String {
+    let default_icon = config.default_icon.to_owned();
+    if let Some(win_id) = window_id {
+        let window_classes = class_for_window(*win_id as i32);
+        let window_class = get_icon_from_classes(config, window_classes);
+        if let Some(class) = window_class {
+            let unicode_chars = fa_map.get(&class);
+            if let Some(unicode) = unicode_chars {
+                let result = from_u32(u32::from_str_radix(unicode.as_str(), 16).unwrap()).unwrap();
+
+                return result.to_string();
+            }
+        }
+    }
+    return default_icon;
 }
 
 pub fn find_file(file: &str, subdir: Option<&str>, extension: Option<&str>) -> Option<PathBuf> {
@@ -145,4 +166,24 @@ pub fn deserialize_toml_file(path: &Path) -> Config {
     let result = fs::read_to_string(&path);
     let result: Result<Config, toml::de::Error> = toml::from_str(&result.unwrap());
     return result.unwrap();
+}
+
+pub fn deserialize_fa_toml_file(path: &Path) -> FAConfig {
+    let result = fs::read_to_string(&path);
+    let result: Result<FAConfig, toml::de::Error> = toml::from_str(&result.unwrap());
+    return result.unwrap();
+}
+
+pub fn read_font_awesome() -> HashMap<String, String> {
+    let file = PathBuf::from("src/assets/char_list.toml");
+    println!("{:?}", file);
+    let config = deserialize_fa_toml_file(&file);
+    let mut fa_map: HashMap<String, String> = HashMap::new();
+    for solid in config.solid {
+        fa_map.insert(solid.name, solid.unicode);
+    }
+    for brand in config.brands {
+        fa_map.insert(brand.name, brand.unicode);
+    }
+    return fa_map;
 }

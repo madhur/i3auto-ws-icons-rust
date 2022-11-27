@@ -56,7 +56,7 @@ impl I3Info {
     }
 
 
-    fn bfs_all_children(&self) -> Vec<I3Node> {
+    fn _bfs_all_children(&self) -> Vec<I3Node> {
         let mut q: VecDeque<&I3Node> = VecDeque::new();
         let mut nodes: Vec<I3Node> = Vec::new();
         q.push_front(&self.node);
@@ -78,9 +78,9 @@ impl I3Info {
         return nodes;
     }
 
-    pub fn get_leaves(&self) -> Vec<I3Node> {
+    pub fn _get_leaves(&self) -> Vec<I3Node> {
         let mut leaves: Vec<I3Node> = Vec::new();
-        for leave in self.bfs_all_children() {
+        for leave in self._bfs_all_children() {
             if leave.node_type == NodeType::Con {
                 leaves.push(leave);
             }
