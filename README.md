@@ -42,7 +42,7 @@ Key | Value | Default
 
 The default icon can be changed through by updating the `default_icon` property 
 
-```
+```toml
 default_icon = '*'
 ```
 
