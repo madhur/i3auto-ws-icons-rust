@@ -14,7 +14,7 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
     let i3_info = I3Info::new(conn);
     let config = read_config();
     let parent_child = i3_info.dfs_parent_child();
-    print_info(&parent_child);
+    // print_info(&parent_child);
     let workspaces = i3_info.get_workspaces();
     // println!("workspaces {:?}", workspaces);
 
@@ -27,7 +27,7 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
             // println!("{:?}", name_parts);
             let mut icon_list = Vec::new();
             for leaf in leaves {
-                println!("Inspect leaf node: {:?}", leaf);
+                // println!("Inspect leaf node: {:?}", leaf);
                 icon_list.push(util::icon_for_window(
                     &leaf.window_id,
                     config.as_ref().unwrap(),
