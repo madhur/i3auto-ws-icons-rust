@@ -1,19 +1,20 @@
+use std::collections::HashMap;
+
+use models::i3_window::I3Window;
 use swayipc::{Connection, EventType};
 use swayipc::{Event, WindowChange};
 mod models;
 use self::models::i3_info::I3Info;
 
 fn rename_workspaces(conn: Connection) {
-    // Check if focused workspace is in "allowed list".
-    // If `workspaces` is empty, skip allow all workspaces.
-    // let workspaces = conn.get_workspaces().unwrap();
-    // println!("{:?}", workspaces);
-
     let i3_info = I3Info::new(conn);
 
-    let _leaves = i3_info.get_leaves();
-    let _parent_child = i3_info.dfs_parent_child();
-    
+    let leaves = i3_info.get_leaves();
+    let parent_child = i3_info.dfs_parent_child();
+    print_info(leaves, parent_child);
+    let workspaces = i3_info.get_workspaces();
+    println!("workspaces {:?}", workspaces);
+
 }
 
 
@@ -32,13 +33,23 @@ fn main() -> Result<(), std::io::Error> {
                     || WindowChange::Move == e.change
                 {
                     rename_workspaces(Connection::new().unwrap());
-                }
-                //println!("{:?}", e);
+                }                
             }
             _ => unreachable!(),
         }
     }
 
     Ok(())
+}
+
+fn print_info(leaves: Vec<I3Window>, parent_child: HashMap<i64, Vec<I3Window>>) {
+    for window in leaves {
+         println!("Leaves {:?}", window);
+    }
+
+    for parent in parent_child.keys() {
+        println!("Parent {:?} -> {:?}", parent , parent_child.get(parent));
+    }
+
 }
 

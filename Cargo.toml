@@ -7,7 +7,7 @@ description = "Autoname workspaces for i3"
 edition = "2021"
 
 [dependencies]
-swayipc = "3.0"
+swayipc = "3.0.1"
 xcb = "0.10"
 
 [dependencies.clap]

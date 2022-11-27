@@ -10,7 +10,10 @@ pub struct I3Node {
     pub name: String,
     pub node_type: NodeType,
     pub nodes: Vec<I3Node>,
-   
+    pub window_class: String,
+    pub window_instance: String,
+    pub window_role: String,
+    pub window_title: String  
 }
 
 impl PartialEq for I3Node {
@@ -44,12 +47,31 @@ impl I3Node {
         for child_node in node.floating_nodes {
             nodes.push(I3Node::new(child_node));
         }
-
+        let window_class;
+        let window_title;
+        let window_instance;
+        let window_role;
+        if let Some(props) = node.window_properties {
+            window_title = props.title.unwrap_or(String::from(""));
+            window_class = props.class.unwrap_or(String::from(""));
+            window_instance = props.instance.unwrap_or(String::from(""));
+            window_role = props.window_role.unwrap_or(String::from(""));
+        }
+        else {
+            window_title = String::from("");
+            window_class = String::from("");
+            window_instance = String::from("");
+            window_role = String::from("");
+        }
         return I3Node {
             id: node.id,
             name: name,
             node_type: node_type,
-            nodes: nodes
+            nodes: nodes,
+            window_class: window_class,
+            window_title: window_title,
+            window_role: window_role,
+            window_instance: window_instance
         };
     }
 }
