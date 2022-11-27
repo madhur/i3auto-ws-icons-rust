@@ -1,9 +1,10 @@
 [package]
 name = "i3auto-ws-icons-rs"
+description = "i3auto-ws-icons-rs listens for i3 events and updates workspace names to show icons for running programs"
 repository = "https://github.com/madhur/i3-auto-workspace-icons-rust"
+readme = "README.md"
 version = "0.1.1"
 authors = ["Madhur Ahuja <ahuja.madhur@gmail.com>"]
-description = "Autoname workspaces for i3"
 edition = "2021"
 
 [dependencies]

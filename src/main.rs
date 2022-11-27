@@ -50,7 +50,7 @@ fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>
                     icon: formatted_icon_list,
                 });
             }
-            conn.run_command(format!(
+            let _ignored = conn.run_command(format!(
                 "rename workspace \"{}\" to \"{}\"",
                 workspace_name, new_workspace_name
             ));
@@ -85,7 +85,7 @@ fn main() -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn print_info(parent_child: &HashMap<i64, Vec<I3Node>>) {
+fn _print_info(parent_child: &HashMap<i64, Vec<I3Node>>) {
     for parent in parent_child.keys() {
         println!(
             "Workspace: Child {:?} -> {:?}",
