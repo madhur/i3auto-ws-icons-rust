@@ -2,7 +2,7 @@ use std::collections::{HashMap, VecDeque};
 use swayipc::{Connection, NodeType, Workspace};
 
 use super::i3_node::I3Node;
-use super::i3_window::I3Window;
+
 
 pub struct I3Info {
     node: I3Node,
@@ -25,8 +25,8 @@ impl I3Info {
         };
     }
 
-    pub fn dfs_parent_child(&self) -> HashMap<i64, Vec<I3Window>> {
-        let mut parent_child: HashMap<i64, Vec<I3Window>> = HashMap::new();
+    pub fn dfs_parent_child(&self) -> HashMap<i64, Vec<I3Node>> {
+        let mut parent_child: HashMap<i64, Vec<I3Node>> = HashMap::new();
         let mut q: VecDeque<&I3Node> = VecDeque::new();
         q.push_back(&self.node);
         let mut parent_workspace = 0;
@@ -38,7 +38,7 @@ impl I3Info {
                     parent_workspace = t.id;
                 }
                 if (child.node_type == NodeType::Con || child.node_type == NodeType::FloatingCon) && child.nodes.len() == 0 {
-                    let mut window_list: Vec<I3Window>;
+                    let mut window_list: Vec<I3Node>;
 
                     let window_list_wrap = parent_child.get(&parent_workspace);
                     if window_list_wrap.is_some() {
@@ -46,11 +46,7 @@ impl I3Info {
                     } else {
                         window_list = Vec::new();
                     }
-                    window_list.push(I3Window {
-                        id: child.id,
-                        name: child.name.clone(),
-                        node_type: child.node_type,
-                    });
+                    window_list.push(child.to_owned());
                     parent_child.insert(parent_workspace, window_list);
                 }
                 q.push_front(&child);
@@ -61,9 +57,9 @@ impl I3Info {
     }
 
 
-    fn bfs_all_children(&self) -> Vec<I3Window> {
+    fn bfs_all_children(&self) -> Vec<I3Node> {
         let mut q: VecDeque<&I3Node> = VecDeque::new();
-        let mut nodes: Vec<I3Window> = Vec::new();
+        let mut nodes: Vec<I3Node> = Vec::new();
         q.push_front(&self.node);
 
         while let Some(t) = q.pop_front() {
@@ -76,19 +72,15 @@ impl I3Info {
                 q.push_front(&child);
             }
             if length == 0 {
-                nodes.push(I3Window {
-                    id: t.id,
-                    name: t.name.clone(),
-                    node_type: t.node_type,
-                });
+                nodes.push(t.to_owned());
             }
         }
 
         return nodes;
     }
 
-    pub fn get_leaves(&self) -> Vec<I3Window> {
-        let mut leaves: Vec<I3Window> = Vec::new();
+    pub fn get_leaves(&self) -> Vec<I3Node> {
+        let mut leaves: Vec<I3Node> = Vec::new();
         for leave in self.bfs_all_children() {
             if leave.node_type == NodeType::Con {
                 leaves.push(leave);

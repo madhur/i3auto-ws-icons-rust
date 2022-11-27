@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use models::i3_window::I3Window;
+
+use models::i3_node::I3Node;
 use swayipc::{Connection, EventType};
 use swayipc::{Event, WindowChange};
 mod models;
@@ -42,7 +43,7 @@ fn main() -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn print_info(leaves: Vec<I3Window>, parent_child: HashMap<i64, Vec<I3Window>>) {
+fn print_info(leaves: Vec<I3Node>, parent_child: HashMap<i64, Vec<I3Node>>) {
     for window in leaves {
          println!("Leaves {:?}", window);
     }
