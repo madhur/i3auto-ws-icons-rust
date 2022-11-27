@@ -13,4 +13,3 @@ pub struct Config {
 pub struct Icon {
     pub icons: HashMap<String, String>,
 }
-

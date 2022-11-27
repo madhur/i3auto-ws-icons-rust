@@ -1,6 +1,7 @@
 use super::models::config::Config;
 use super::models::name_parts::NameParts;
 use crate::models::font_awesome::FAConfig;
+use crate::models::font_awesome::Asset;
 use dirs_next::{config_dir, data_dir};
 use regex::Regex;
 use std::char::from_u32;
@@ -10,6 +11,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use xcb::xproto;
 use xcb::Connection;
+
 
 pub fn parse_workspace_name(name: String) -> Option<NameParts> {
     let pattern = Regex::new(r"(\d+):?(\w+)? ?(.+)?").expect("Invalid regex");
@@ -168,16 +170,15 @@ pub fn deserialize_toml_file(path: &Path) -> Config {
     return result.unwrap();
 }
 
-pub fn deserialize_fa_toml_file(path: &Path) -> FAConfig {
-    let result = fs::read_to_string(&path);
-    let result: Result<FAConfig, toml::de::Error> = toml::from_str(&result.unwrap());
+pub fn deserialize_fa_toml_file(contents: &str) -> FAConfig {
+    let result: Result<FAConfig, toml::de::Error> = toml::from_str(contents);
     return result.unwrap();
 }
 
 pub fn read_font_awesome() -> HashMap<String, String> {
-    let file = PathBuf::from("src/assets/char_list.toml");
-    println!("{:?}", file);
-    let config = deserialize_fa_toml_file(&file);
+    let fa_toml = Asset::get("char_list.toml").unwrap();
+    let contents = std::str::from_utf8(fa_toml.data.as_ref()).unwrap();
+    let config = deserialize_fa_toml_file(contents);
     let mut fa_map: HashMap<String, String> = HashMap::new();
     for solid in config.solid {
         fa_map.insert(solid.name, solid.unicode);

@@ -1,5 +1,5 @@
 use serde_derive::Deserialize;
-
+use rust_embed::RustEmbed;
 #[derive(Deserialize, Debug)]
 pub struct FAConfig {
     pub solid: Vec<Solid>,
@@ -17,3 +17,7 @@ pub struct Brand {
     pub unicode: String,
 }
 
+
+#[derive(RustEmbed)]
+#[folder = "src/assets/"]
+pub struct Asset;
