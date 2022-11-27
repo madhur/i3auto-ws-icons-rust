@@ -69,7 +69,7 @@ Any class names involving special characters such as hyphens and decimals should
 
 ## Debugging
 
-Run `i3auto-ws-icons-rust` in a terminal to check the JSON it is outputting.  
+Run `i3auto-ws-icons-rust` in a terminal to check the lot it is outputting. Raise an [issue here](https://github.com/madhur/i3auto-ws-icons-rust/issues) if you encounter any issues.
 
 ## Acknowledgements
 
