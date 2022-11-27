@@ -30,7 +30,7 @@ exec_always --no-startup-id "$HOME/.cargo/bin/i3auto-ws-icons-rs"
 
 ## Configuration
 
-After installing `i3auto-ws-icons-rust`, edit the [example configuration](https://raw.githubusercontent.com/mahur/i3auto-ws-icons-rust/master/examples/config.toml) to your liking.
+After installing `i3auto-ws-icons-rust`, edit the [example configuration](https://raw.githubusercontent.com/madhur/i3auto-ws-icons-rust/master/examples/config.toml) to your liking.
 The default location is `$XDG_CONFIG_HOME/i3auto-ws-icons-rust/config.toml`.
 
 The configuration is driven through mapping of WM_CLASS of each window to the name of [Font Awesome](https://fontawesome.com/icons) icon.
