@@ -11,6 +11,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use xcb::xproto;
 use xcb::Connection;
+use chrono;
 
 
 pub fn parse_workspace_name(name: String) -> Option<NameParts> {
@@ -33,7 +34,15 @@ pub fn parse_workspace_name(name: String) -> Option<NameParts> {
 }
 
 pub fn construct_workspace_name(parts: NameParts) -> String {
-    return format!("{}:{}{}", parts.num, parts.short_name, parts.icon);
+    if parts.short_name.len() > 0 {
+        return format!("{}:{}{}", parts.num, parts.short_name, parts.icon);
+    }
+    else if parts.icon.len() > 0  {
+        return format!("{}:{}", parts.num, parts.icon);
+    }
+    else {
+        return format!("{}", parts.num);
+    }
 }
 
 fn get_class(conn: &Connection, id: &i32) -> String {
@@ -76,8 +85,8 @@ fn get_class(conn: &Connection, id: &i32) -> String {
 fn get_icon_from_classes(config: &Config, window_classes: String) -> Option<String> {
     let results: Vec<&str> = window_classes.split('\0').collect();
     for str in results {
-        println!("checking icon for {}", str);
-        let window_icon = config.icons.icons.get(&str.to_lowercase());
+        println!("checking icon for {}", str.to_lowercase());
+        let window_icon = config.icons.as_ref().unwrap().icons.get(&str.to_lowercase());
         if let Some(icon) = window_icon {
             return Some(icon.to_string());
         }
@@ -112,7 +121,7 @@ pub fn icon_for_window(
             }
         }
     }
-    return default_icon;
+    return default_icon.unwrap();
 }
 
 pub fn find_file(file: &str, subdir: Option<&str>, extension: Option<&str>) -> Option<PathBuf> {
@@ -187,4 +196,10 @@ pub fn read_font_awesome() -> HashMap<String, String> {
         fa_map.insert(brand.name, brand.unicode);
     }
     return fa_map;
+}
+
+pub fn debug(verbose: bool, prefix: &str, arg: impl core::fmt::Debug) {
+    if verbose {
+        println!("{} {} {:?}", chrono::offset::Local::now(), prefix, arg);
+    }
 }

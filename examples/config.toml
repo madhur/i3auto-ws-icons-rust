@@ -1,5 +1,6 @@
 default_icon = '*'
 remove_duplicates = false
+enable_rename = true
 
 [[icons]]
 alacritty= 'terminal'

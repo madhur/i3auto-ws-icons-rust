@@ -1,6 +1,6 @@
 [package]
 name = "i3auto-ws-icons-rs"
-description = "i3auto-ws-icons-rs listens for i3 events and updates workspace names to show icons for running programs"
+description = "i3auto-ws-icons-rs listens for i3 events and updates workspace names to show icons for running programs."
 repository = "https://github.com/madhur/i3-auto-workspace-icons-rust"
 readme = "README.md"
 version = "0.1.1"
@@ -16,6 +16,7 @@ regex = "1"
 serde_derive = "1.0.147"
 xproto = "2.0.1"
 rust-embed="6.4.2"
+chrono = "0.4"
 
 [dependencies.clap]
 version = "3.0"

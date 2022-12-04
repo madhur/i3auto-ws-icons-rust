@@ -1,3 +1,4 @@
+use clap::Parser;
 use models::i3_node::I3Node;
 use std::collections::HashMap;
 use swayipc::{Connection, EventType};
@@ -9,61 +10,17 @@ mod util;
 use self::models::config::Config;
 use std::time::Instant;
 
-fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>) {
-    let now = Instant::now();
-    let i3_info = I3Info::new(conn);
-    let config = read_config();
-    let parent_child = i3_info.dfs_parent_child();
-    // print_info(&parent_child);
-    let workspaces = i3_info.get_workspaces();
-    // println!("workspaces {:?}", workspaces);
-
-    for workspace in workspaces {
-        // get leaves of workspace
-        let leaves_wrap = parent_child.get(&workspace.id);
-        if let Some(leaves) = leaves_wrap {
-            let workspace_name = workspace.name.as_str();
-            let name_parts = util::parse_workspace_name(workspace_name.to_string());
-            // println!("{:?}", name_parts);
-            let mut icon_list = Vec::new();
-            for leaf in leaves {
-                // println!("Inspect leaf node: {:?}", leaf);
-                icon_list.push(util::icon_for_window(
-                    &leaf.window_id,
-                    config.as_ref().unwrap(),
-                    fa_map.to_owned(),
-                ));
-            }
-            let formatted_icon_list = util::format_icon_list(icon_list);
-
-            let new_workspace_name;
-            if let Some(name_part) = name_parts {
-                new_workspace_name = util::construct_workspace_name(NameParts {
-                    num: name_part.num,
-                    short_name: name_part.short_name,
-                    icon: formatted_icon_list,
-                });
-            } else {
-                new_workspace_name = util::construct_workspace_name(NameParts {
-                    num: workspace.num,
-                    short_name: String::from(""),
-                    icon: formatted_icon_list,
-                });
-            }
-            let _ignored = conn.run_command(format!(
-                "rename workspace \"{}\" to \"{}\"",
-                workspace_name, new_workspace_name
-            ));
-        }
-    }
-    let elapsed = now.elapsed();
-    println!("Completed rename loop in : {:.2?}", elapsed);
+#[derive(Debug, Parser)]
+#[clap(author, about, version = env!("VERSION"))]
+struct CliArgs {
+    #[clap(long = "verbose", short = 'v')]
+    verbose: bool,
 }
-
 fn main() -> Result<(), std::io::Error> {
+    let args = CliArgs::parse();
     let mut conn = Connection::new().unwrap();
     let mut font_awesome = util::read_font_awesome();
-    rename_workspaces(&mut conn, &mut font_awesome);
+    rename_workspaces(&mut conn, &mut font_awesome, &args);
     for event in Connection::new()
         .unwrap()
         .subscribe(&[EventType::Window])
@@ -75,7 +32,7 @@ fn main() -> Result<(), std::io::Error> {
                     || WindowChange::Close == e.change
                     || WindowChange::Move == e.change
                 {
-                    rename_workspaces(&mut Connection::new().unwrap(), &mut font_awesome);
+                    rename_workspaces(&mut Connection::new().unwrap(), &mut font_awesome, &args);
                 }
             }
             _ => unreachable!(),
@@ -83,6 +40,77 @@ fn main() -> Result<(), std::io::Error> {
     }
 
     Ok(())
+}
+
+fn rename_workspaces(conn: &mut Connection, fa_map: &mut HashMap<String, String>, args: &CliArgs) {
+    util::debug(args.verbose, "", "Started rename loop");
+    let now = Instant::now();
+    let i3_info = I3Info::new(conn);
+    let config = read_config();
+
+    //TODO: The default config should be emitted by now if it doesn't exist.
+
+    let final_config = config.unwrap();
+    // Return if rename config is disabled
+    if let Some(enabled) = final_config.enable_rename {
+        if enabled == false {
+            util::debug(
+                args.verbose,
+                "",
+                "Rename not enabled, returning".to_string(),
+            );
+            return;
+        }
+    }
+    let parent_child = i3_info.dfs_parent_child();
+    // print_info(&parent_child);
+    let workspaces = i3_info.get_workspaces();
+    // println!("workspaces {:?}", workspaces);
+
+    for workspace in workspaces {
+        // get leaves of workspace
+        util::debug(args.verbose, "Checking workspace", &workspace);
+        let leaves_wrap = parent_child.get(&workspace.id);
+
+        let workspace_name = workspace.name.as_str();
+        let name_parts = util::parse_workspace_name(workspace_name.to_string());
+        util::debug(args.verbose, "name_parts", &name_parts);
+        let mut icon_list = Vec::new();
+
+        if let Some(leaves) = leaves_wrap {
+            for leaf in leaves {
+                util::debug(args.verbose, "Inspect leaf node:", leaf);
+
+                icon_list.push(util::icon_for_window(
+                    &leaf.window_id,
+                    &final_config,
+                    fa_map.to_owned(),
+                ));
+            }
+        }
+        let formatted_icon_list = util::format_icon_list(icon_list);
+
+        let new_workspace_name;
+        if let Some(name_part) = name_parts {
+            new_workspace_name = util::construct_workspace_name(NameParts {
+                num: name_part.num,
+                short_name: name_part.short_name,
+                icon: formatted_icon_list,
+            });
+        } else {
+            new_workspace_name = util::construct_workspace_name(NameParts {
+                num: workspace.num,
+                short_name: String::from(""),
+                icon: formatted_icon_list,
+            });
+        }
+        let _ignored = conn.run_command(format!(
+            "rename workspace \"{}\" to \"{}\"",
+            workspace_name, new_workspace_name
+        ));
+    }
+    let elapsed = now.elapsed();
+    util::debug(args.verbose, "Completed rename loop in : ", elapsed);
 }
 
 fn _print_info(parent_child: &HashMap<i64, Vec<I3Node>>) {
