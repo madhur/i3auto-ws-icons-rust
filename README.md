@@ -20,12 +20,24 @@ $ cargo install --path . --locked
 ```
 
 By default, this will install the binary to `~/.cargo/bin/i3status-rs`.
-## Integrate it into i3/sway
+## Integrate it into i3 / sway
 
 The most preferred way is to run it with i3 configuration file and set it to start as startup as follows
 
 ```
 exec_always --no-startup-id "$HOME/.cargo/bin/i3auto-ws-icons-rs"
+```
+
+The default i3 config's keybindings reference workspaces by name, which is an issue when using this script because the "names" are constantly changing to include window icons.  Instead, you'll need to change the keybindings to
+reference workspaces by number. 
+
+Prefer
+```
+    bindsym $mod+1 workspace number 1
+```
+over
+```
+    bindsym $mod+1 workspace 1
 ```
 
 ## Configuration
@@ -64,12 +76,12 @@ jetbrains-studio= 'code'
 jetbrains-idea-ce= 'java'
 "gimp-2.8"= 'image'
 ```
-Any class names involving special characters such as hyphens and decimals should be enclosed in quotes as shown above.
+Any class names involving special characters such as hyphens and decimals should be enclosed in quotes as shown above. The class names are case insensitive.
 
 
 ## Debugging
 
-Run `i3auto-ws-icons-rust` in a terminal to check the lot it is outputting. Raise an [issue here](https://github.com/madhur/i3auto-ws-icons-rust/issues) if you encounter any issues.
+Run `i3auto-ws-icons-rust` in a terminal with the `-v` or `--verbose` parameter to check the logs. Attach the [logs here](https://github.com/madhur/i3auto-ws-icons-rust/issues) along with the description if you encounter any issues.
 
 ## Acknowledgements
 
@@ -80,3 +92,4 @@ This project borrows some ideas and inspirations from following awesome open sou
 * [altdesktop/i3ipc-python](https://github.com/altdesktop/i3ipc-python)
 * [BiagioFesta/i3-autolayout](https://github.com/BiagioFesta/i3-autolayout)
 * [greshake/i3status-rust](https://github.com/greshake/i3status-rust)
+* [pierrechevalier83/workstyle](https://github.com/pierrechevalier83/workstyle)
