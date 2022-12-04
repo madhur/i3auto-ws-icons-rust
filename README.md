@@ -3,10 +3,10 @@
 `i3auto-ws-icons-rs` listens for i3 events and updates workspace names to show icons
 for running programs. The icons can be configured by editing the `config.toml` configuration file.
 
-* Screenshot
+* Screenshot  
 ![alt tag](https://github.com/madhur/i3auto-ws-icons-rust/blob/main/screenshots/bar.png)
 
-* Full window:
+* Full window  
 ![alt tag](https://github.com/madhur/i3auto-ws-icons-rust/blob/main/screenshots/full.png)
 
 ## Getting Started
