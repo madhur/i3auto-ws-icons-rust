@@ -1,5 +1,6 @@
 use super::models::config::Config;
 use super::models::name_parts::NameParts;
+use crate::models::config::Icon;
 use crate::models::font_awesome::FAConfig;
 use crate::models::font_awesome::Asset;
 use dirs_next::{config_dir, data_dir};
@@ -180,7 +181,15 @@ pub fn deserialize_toml_file(path: &Path) -> Config {
 
 pub fn deserialize_config_file(config_contents: String) -> Config {
     let result: Result<Config, toml::de::Error> = toml::from_str(config_contents.as_str());
-    return result.expect("Invalid format of the configuration file");
+    let mut final_config = result.expect("Invalid format of the configuration file");
+    let icon_map = &final_config.icons.as_ref().unwrap().icons;
+    let mut case_insensitive_map: HashMap<String, String> = HashMap::new();
+    for key in icon_map.keys() {
+        case_insensitive_map.insert(key.to_lowercase().to_string(), icon_map.get(key).unwrap().to_string());
+    }
+
+    final_config.icons = Some(Icon{icons:case_insensitive_map });
+    return final_config;
 }
 
 pub fn deserialize_fa_toml_file(contents: &str) -> FAConfig {
