@@ -1,4 +1,5 @@
 use clap::Parser;
+use models::font_awesome::DefaultConfig;
 use models::i3_node::I3Node;
 use std::collections::HashMap;
 use swayipc::{Connection, EventType};
@@ -14,6 +15,7 @@ use std::time::Instant;
 #[clap(author, about, version = env!("VERSION"))]
 struct CliArgs {
     #[clap(long = "verbose", short = 'v')]
+    /// Print debug information while running
     verbose: bool,
 }
 fn main() -> Result<(), std::io::Error> {
@@ -131,5 +133,8 @@ fn read_config() -> Option<Config> {
         let config: Config = util::deserialize_toml_file(path.as_path());
         return Some(config);
     }
-    return None;
+    util::debug(true, "Using default config. Config file not found in: ", config_path);
+    let default_config_toml = DefaultConfig::get("config.toml").unwrap();
+    let contents = std::str::from_utf8(default_config_toml.data.as_ref()).unwrap();
+    return Some(util::deserialize_config_file(contents.to_string()));
 }

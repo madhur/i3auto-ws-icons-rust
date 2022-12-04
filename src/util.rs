@@ -175,8 +175,12 @@ pub fn find_file(file: &str, subdir: Option<&str>, extension: Option<&str>) -> O
 
 pub fn deserialize_toml_file(path: &Path) -> Config {
     let result = fs::read_to_string(&path);
-    let result: Result<Config, toml::de::Error> = toml::from_str(&result.unwrap());
-    return result.unwrap();
+    return deserialize_config_file(result.unwrap());
+}
+
+pub fn deserialize_config_file(config_contents: String) -> Config {
+    let result: Result<Config, toml::de::Error> = toml::from_str(config_contents.as_str());
+    return result.expect("Invalid format of the configuration file");
 }
 
 pub fn deserialize_fa_toml_file(contents: &str) -> FAConfig {

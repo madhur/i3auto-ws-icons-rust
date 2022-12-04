@@ -21,3 +21,8 @@ pub struct Brand {
 #[derive(RustEmbed)]
 #[folder = "src/assets/"]
 pub struct Asset;
+
+#[derive(RustEmbed)]
+#[folder = "examples/"]
+
+pub struct DefaultConfig;
